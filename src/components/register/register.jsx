@@ -13,6 +13,8 @@ export default function register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] =useState('');
 
+  const [alert, setAlert] = useState({});
+
   const handleSubmit = async (e) => {
     e.preventDefault();//prevent default submission process when submitting the page
     
@@ -33,14 +35,15 @@ export default function register() {
         setPassword('');
         setConfirmPassword('');
     }catch (err) {
-      console.log(parseErrors(err));
-      // console.log(err);
+      setAlert(parseErrors(err));
     }
   };
 
   return (
     <>
-    <Alert type="error" />
+    {alert.message && (
+      <Alert type="error"  data={ alert }/>)}
+
     <form className="form form--page" onSubmit={handleSubmit}>
       <div className="form__group form__group--page">
         <label className="form__label">First name</label>

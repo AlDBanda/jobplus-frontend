@@ -1,14 +1,14 @@
 import React from 'react'
 import './Alert.scss';
 
-export default function Alert({ type }) {
+export default function Alert({ type, data }) {
   return (
     <div className={`alert alert--${type}`}>
-      <p className="alert__message">This is a message</p>
+      <p className="alert__message">{data.message}</p>
       <ul className="alert__details">
-        <li className="alert__detail">This is detail 1</li>
-        <li className="alert__detail">This is detail 2</li>
-        <li className="alert__detail">This is detail 3</li>
+        {data.details.map((detail, index) => (
+        <li className={index}>{detail.message}</li>
+        ))}
       </ul>
     </div>
   )
