@@ -3,6 +3,8 @@ import '../styles/form.scss';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { parseErrors } from '../../utils/parseErrors';
+import alert from '../alert/alert';
+import Alert from '../alert/alert';
 
 export default function register() {
   const [firstName, setFirstName] = useState('');
@@ -37,6 +39,8 @@ export default function register() {
   };
 
   return (
+    <>
+    <Alert type="error" />
     <form className="form form--page" onSubmit={handleSubmit}>
       <div className="form__group form__group--page">
         <label className="form__label">First name</label>
@@ -92,5 +96,6 @@ export default function register() {
         Already have an account? <Link to='/login'>Login</Link>
       </footer>
     </form>
+    </>
   );
 }
