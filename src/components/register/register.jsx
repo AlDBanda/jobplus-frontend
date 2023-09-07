@@ -43,7 +43,11 @@ export default function register() {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setAlert({});
+        setAlert({
+          message: 'Account created succesfully',
+          details: [],
+          type: 'success',
+        });
     }catch (err) {
       setAlert(parseErrors(err));
     }
@@ -52,7 +56,7 @@ export default function register() {
   return (
     <>
 
-      <Alert type="error"  data={ alert }/>
+      <Alert  data={ alert }/>
 
     <form className="form form--page" onSubmit={handleSubmit}>
       <div className="form__group form__group--page">

@@ -1,7 +1,7 @@
 import React from 'react'
 import './Alert.scss';
 
-export default function Alert({ type, data: {message, details=[] }}) {
+export default function Alert({  data: {message, details=[], type='error' }}) {
   if (!message) return null;
 
   return (

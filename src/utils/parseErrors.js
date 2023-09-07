@@ -3,7 +3,7 @@ export const parseErrors = (err) => {
   if (err?.response?.data?.error?.name=== 'ValidationError'){
   return {
 message: err.response.data.error.message,
-details: err.response.data.error.details.errors,
+details: err.response.data.error.details.errors
   }
 }
 
