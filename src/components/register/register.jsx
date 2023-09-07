@@ -18,6 +18,15 @@ export default function register() {
   const handleSubmit = async (e) => {
     e.preventDefault();//prevent default submission process when submitting the page
     
+  // check if password and confirm password match 
+  if (password !== confirmPassword) {
+    setAlert({
+      message: 'Password and confirm password do not match',
+      details: [],
+    });
+    return;  //exit early, a request wont be made to the backend
+  }
+
     const data = {
       firstName,
       lastName,
@@ -34,6 +43,7 @@ export default function register() {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
+        setAlert({});
     }catch (err) {
       setAlert(parseErrors(err));
     }
@@ -41,8 +51,8 @@ export default function register() {
 
   return (
     <>
-    {alert.message && (
-      <Alert type="error"  data={ alert }/>)}
+
+      <Alert type="error"  data={ alert }/>
 
     <form className="form form--page" onSubmit={handleSubmit}>
       <div className="form__group form__group--page">
