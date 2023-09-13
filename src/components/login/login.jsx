@@ -2,56 +2,60 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/form.scss';
 import axios from 'axios';
+import Alert from '../alert/alert';
+import { parseErrors } from '../../utils/parseErrors';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
-  const [email, setEmail] = useState('');
+export default function login() {
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (e) => {
+  const [alert, setAlert] = useState({});
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
+
+    const data = {
+      identifier,
+      password,
+    };
 
     // Checking if the function is being called correctly
     console.log('handleLogin called');
 
     try {
-      const response = await axios.post('http://localhost:1337/api/auth/local', {
-        identifier: email,
-        password: password,
-      });
+      const response = await axios.post(
+        'http://localhost:1337/api/auth/local', 
+        data
+      );
+      
+      //reset our state
+      setIdentifier('');
+      setPassword('');
 
-      console.log('Login successful!');
-      // Login success callback
-
-    } catch (error) {
-      // Handle error
-      console.error('An error occurred', error);
-
-      // Using optional chaining to access error.response
-      const statusCode = error.response?.status;
-      const responseData = error.response?.data;
-
-      // Checking if there's a response in the error
-      if (statusCode && responseData) {
-        // Log the status code and response data
-        console.log('Status code:', statusCode);
-        console.log('Response data:', responseData);
-      } else {
-        // Handle errors that don't have a response property
-        console.log('Error message:', error.message);
-      }
+      //navigate to home page
+      navigate('/');
+    } catch (err) {
+      setAlert(parseErrors(err));
     }
-  }
+  };
+
 
   return (
-    <form className="form form--page" onSubmit={handleLogin}> {/* Using onSubmit to handle form submission */}
+    <>
+    <Alert data={alert} />
+
+    <form className="form form--page" onSubmit={handleSubmit}> {/* Using onSubmit to handle form submission */}
       <div className="form__group form__group--page">
         <label className="form__label">Email</label>
         <input
           className="form__field"
           type="text"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
         />
       </div>
 
@@ -79,5 +83,6 @@ export default function Login() {
         Don't have an account? <Link to="/register">Register</Link>
       </footer>
     </form>
+    </>
   );
 }

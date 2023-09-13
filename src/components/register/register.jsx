@@ -3,7 +3,6 @@ import '../styles/form.scss';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { parseErrors } from '../../utils/parseErrors';
-import alert from '../alert/alert';
 import Alert from '../alert/alert';
 
 export default function register() {
