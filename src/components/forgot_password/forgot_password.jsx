@@ -4,22 +4,18 @@ import '../styles/form.scss';
 import axios from 'axios';
 import Alert from '../alert/alert';
 import { parseErrors } from '../../utils/parseErrors';
-import { useNavigate } from 'react-router-dom';
 
-export default function login() {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
 
+export default function forgot_password() {
+  const [email, setEmail] = useState('');
   const [alert, setAlert] = useState({});
 
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
     const data = {
-      identifier,
-      password,
+      email,
     };
 
     // Checking if the function is being called correctly
@@ -27,16 +23,19 @@ export default function login() {
 
     try {
       const response = await axios.post(
-        'http://localhost:1337/api/auth/local', 
+        'http://localhost:1337/api/auth/forgot-password', 
         data
       );
       
       //reset our state
-      setIdentifier('');
-      setPassword('');
+      setEmail('');
+    
 
-      //navigate to home page
-      navigate('/');
+    //set success alert
+    setAlert({
+      type:'success',
+      message: 'Please check your email for further instructions',
+    })
     } catch (err) {
       setAlert(parseErrors(err));
     }
@@ -54,21 +53,12 @@ export default function login() {
           className="form__field"
           type="text"
           placeholder="Email"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
 
-      <div className="form__group form__group--page">
-        <label className="form__label">Password</label>
-        <input
-          className="form__field"
-          type="password" // Change value to password
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+      
 
       <div className="form__group form__group--page">
         <button
@@ -80,8 +70,7 @@ export default function login() {
       </div>
 
       <footer>
-        Don't have an account? <Link to="/register">Register</Link>
-        or  <Link to="/forgot-password">Forgot Password</Link>
+        Have an account already? <Link to="/login">Login</Link>
       </footer>
     </form>
     </>
