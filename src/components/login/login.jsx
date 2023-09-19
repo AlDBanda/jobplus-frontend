@@ -5,6 +5,7 @@ import axios from 'axios';
 import Alert from '../alert/alert';
 import { parseErrors } from '../../utils/parseErrors';
 import { useNavigate } from 'react-router-dom';
+import { useApi } from '../../hooks/useApi';
 
 export default function login() {
   const [identifier, setIdentifier] = useState('');
@@ -13,6 +14,7 @@ export default function login() {
   const [alert, setAlert] = useState({});
 
   const navigate = useNavigate();
+  const { post } = useApi();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
@@ -25,21 +27,25 @@ export default function login() {
     // Checking if the function is being called correctly
     console.log('handleLogin called');
 
-    try {
-      const response = await axios.post(
-        'http://localhost:1337/api/auth/local', 
-        data
-      );
-      
-      //reset our state
-      setIdentifier('');
-      setPassword('');
+   
+    const res = await post('auth/local', {data: data});
+    console.log(res);
 
-      //navigate to home page
-      navigate('/');
-    } catch (err) {
-      setAlert(parseErrors(err));
-    }
+    // try {
+    //   const response = await axios.post(
+    //     'http://localhost:1337/api/auth/local', 
+    //     data
+    //   );
+      
+    //   //reset our state
+    //   setIdentifier('');
+    //   setPassword('');
+
+    //   //navigate to home page
+    //   navigate('/');
+    // } catch (err) {
+    //   setAlert(parseErrors(err));
+    // }
   };
 
 

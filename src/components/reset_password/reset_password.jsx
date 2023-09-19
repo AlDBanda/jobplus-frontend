@@ -4,13 +4,20 @@ import '../styles/form.scss';
 import axios from 'axios';
 import Alert from '../alert/alert';
 import { parseErrors } from '../../utils/parseErrors';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function reset_password() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [alert, setAlert] = useState({});
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const code = searchParams.get('code');
+
+  console.log('code', code);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
@@ -18,6 +25,7 @@ export default function reset_password() {
     const data = {
       passwordConfirmation,
       password,
+      code,
     };
 
     // Checking if the function is being called correctly
