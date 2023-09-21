@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { parseErrors } from '../../utils/parseErrors';
 import Alert from '../alert/alert';
+import { useApi } from '../../hooks/useApi';
 
 export default function register() {
   const [firstName, setFirstName] = useState('');
@@ -13,6 +14,7 @@ export default function register() {
   const [confirmPassword, setConfirmPassword] =useState('');
 
   const [alert, setAlert] = useState({});
+  const { post } = useApi();
 
   const handleSubmit = async (e) => {
     e.preventDefault();//prevent default submission process when submitting the page
@@ -34,9 +36,8 @@ export default function register() {
       username: email,
     };
 
-    try {
-        const res = await axios.post('http://localhost:1337/api/auth/local/register', data);
-        // reset our state
+    const handleSuccess = () => {
+      // reset our state
         setFirstName('');
         setLastName('');
         setEmail('');
@@ -47,9 +48,15 @@ export default function register() {
           details: [],
           type: 'success',
         });
-    }catch (err) {
-      setAlert(parseErrors(err));
+
     }
+
+    await post ('auth/local/register',{
+      data: data,
+      onSuccess: (res) => handleSuccess(),
+      onFailure: (err) => setAlert(err)
+
+    });
   };
 
   return (

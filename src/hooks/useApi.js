@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { parseErrors } from '../../src/utils/parseErrors';
 
 export const useApi = () => {
   const request = async (endpoint, options={}) => {
@@ -9,12 +10,11 @@ export const useApi = () => {
          data: options.data ||{},
          params: options.params ||{},
      });
-     return res;
+     options.onSuccess && options.onSuccess(res)
     } catch (err) {
-      console.log(err);
+      options.onFailure && options.onFailure(parseErrors(err))
     }
   };
-
   return {
     post: (endpoint, options) => request(endpoint, {...options, method: 'POST'}),
   }

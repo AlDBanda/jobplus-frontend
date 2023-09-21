@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/form.scss';
-import axios from 'axios';
 import Alert from '../alert/alert';
-import { parseErrors } from '../../utils/parseErrors';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 
@@ -19,17 +17,19 @@ export default function login() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
-    const data = {
-      identifier,
-      password,
-    };
 
     // Checking if the function is being called correctly
     console.log('handleLogin called');
-
+     
+    await post ('auth/local', {
+      data: { identifier, password },
+      onSuccess: (res) => handleSuccess(),
+      onFailure: (err) => setAlert(err)
+    });
+  };
    
-    const res = await post('auth/local', {data: data});
-    console.log(res);
+    // const res = await post('auth/local', {data: data});
+    // console.log(res);
 
     // try {
     //   const response = await axios.post(
@@ -46,7 +46,7 @@ export default function login() {
     // } catch (err) {
     //   setAlert(parseErrors(err));
     // }
-  };
+  
 
 
   return (
@@ -92,4 +92,4 @@ export default function login() {
     </form>
     </>
   );
-}
+  }
