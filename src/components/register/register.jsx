@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import '../styles/form.scss';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { parseErrors } from '../../utils/parseErrors';
 import Alert from '../alert/alert';
 import { useApi } from '../../hooks/useApi';
 
