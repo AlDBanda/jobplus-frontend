@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/form.scss';
-
 import Alert from '../alert/alert';
-
 import { useApi } from '../../hooks/useApi';
 
 

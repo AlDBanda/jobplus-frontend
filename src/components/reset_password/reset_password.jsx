@@ -6,39 +6,47 @@ import { useApi } from '../../hooks/useApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function reset_password() {
+  // State variables for password, password confirmation, and alert messages
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [alert, setAlert] = useState({});
 
+  // React Router hooks for navigation and location
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Custom hook for making API requests
   const { post } = useApi();
 
+  // Extracting the 'code' parameter from the URL query string
   const searchParams = new URLSearchParams(location.search);
   const code = searchParams.get('code');
 
+  // Function to handle a successful password reset
   const handleSuccess = () => {
-    //reset our state
+    // Reset our state by clearing password and passwordConfirmation
     setPasswordConfirmation('');
     setPassword('');
-    //navigate to the login page
+
+    // Navigate to the login page
     navigate('/login');
   }
 
-  
-
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
-   await post('auth/reset-password', {
-    data: { passwordConfirmation, password, code},
-    onSuccess: (res) => handleSuccess(),
-    onFailure: (err) => setAlert(err)
-   });
-    // Checking if the function is being called correctly
-    console.log('handleLogin called');
+    // Make an API POST request to reset the password
+    await post('auth/reset-password', {
+      data: { passwordConfirmation, password, code },
+      onSuccess: (res) => handleSuccess(), // Call handleSuccess on success
+      onFailure: (err) => setAlert(err)     // Set alert message on failure
+    });
 
+    // Checking if the function is being called correctly
+    console.log('handleSubmit called');
+
+   
     // try {
     //   const response = await axios.post(
     //     'http://localhost:1337/api/auth/reset-password',
@@ -55,6 +63,7 @@ export default function reset_password() {
     //   setAlert(parseErrors(err));
     // }
   };
+
 
   return (
     <>
