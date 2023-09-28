@@ -4,6 +4,7 @@ import '../styles/form.scss';
 import Alert from '../alert/alert';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
+import cookie from 'js-cookie';
 
 export default function login() {
   const [identifier, setIdentifier] = useState('');
@@ -14,6 +15,18 @@ export default function login() {
   const navigate = useNavigate();
   const { post } = useApi();
 
+  const handleSuccess = (res) => {
+    //set the jwt token in a cookie
+    cookie.set('jobplus-token', res.data.jwt, {expires: 4 / 24 }); //expires in 4 hours
+    
+
+    //reset our state
+    setIdentifier('');
+    setPassword('');
+    //navigate to homepage
+    navigate('/');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
@@ -23,7 +36,7 @@ export default function login() {
      
     await post ('auth/local', {
       data: { identifier, password },
-      onSuccess: (res) => handleSuccess(),
+      onSuccess: (res) => handleSuccess(res),
       onFailure: (err) => setAlert(err)
     });
   };
