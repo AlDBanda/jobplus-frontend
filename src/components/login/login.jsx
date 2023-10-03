@@ -9,7 +9,6 @@ import cookie from 'js-cookie';
 export default function login() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-
   const [alert, setAlert] = useState({});
 
   const navigate = useNavigate();

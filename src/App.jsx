@@ -16,8 +16,11 @@ import PrivateRoute from './components/private_route/private_route';
 function App() {
   return (
     <Routes>
-      <Route path="/*" element={
+      <Route 
+      path="/*" 
+      element={
       <PrivateRoute>
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/applications" element={<ApplicationPage />} />
         <Route path="/apply" element={<ApplyPage />} />
@@ -25,7 +28,9 @@ function App() {
         <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/saved-jobs" element={<SavedJobPage />} />
-      </PrivateRoute>} 
+        </Routes>
+      </PrivateRoute>
+       } 
       />
 
      
