@@ -5,11 +5,14 @@ import Alert from '../alert/alert';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
 import cookie from 'js-cookie';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function login() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [alert, setAlert] = useState({});
+
+  const { setIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
   const { post } = useApi();
@@ -22,6 +25,8 @@ export default function login() {
     //reset our state
     setIdentifier('');
     setPassword('');
+    //set authenticated state to true
+    setIsAuthenticated(true);
     //navigate to homepage
     navigate('/');
   };
