@@ -4,8 +4,8 @@ import '../styles/form.scss';
 import Alert from '../alert/alert';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
-import cookie from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
+import { useCookie } from '../../hooks/useCookie';
 
 export default function login() {
   const [identifier, setIdentifier] = useState('');
@@ -14,13 +14,14 @@ export default function login() {
 
   const { setIsAuthenticated } = useAuth();
 
+  const { saveAuthCookie } = useCookie();
+
   const navigate = useNavigate();
   const { post } = useApi();
 
   const handleSuccess = (res) => {
     //set the jwt token in a cookie
-    cookie.set('jobplus-token', res.data.jwt, {expires: 4 / 24 }); //expires in 4 hours
-    
+    saveAuthCookie(res.data.jwt);
 
     //reset our state
     setIdentifier('');

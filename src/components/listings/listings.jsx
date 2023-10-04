@@ -9,16 +9,16 @@ export default function listings() {
   return (
     <section>
       <a href="apply.html">
-        <div class="listing__card">
-          <header class="listing__header">
-            <h1 class="listing__title">Regulatory Affairs Senior Manager</h1>
-            <img class="listing__saved" src={StarSaved} alt="" />
-            <p class="listing__company">
+        <div className="listing__card">
+          <header className="listing__header">
+            <h1 className="listing__title">Regulatory Affairs Senior Manager</h1>
+            <img className="listing__saved" src={StarSaved} alt="" />
+            <p className="listing__company">
               Posted by <span>Koco Media</span>
             </p>
           </header>
 
-          <ul class="listing__items">
+          <ul className="listing__items">
             <li>
               <img src={Money} alt="" />
               <b>Salary negotiable</b>
@@ -33,12 +33,12 @@ export default function listings() {
             </li>
           </ul>
 
-          <p class="listing__detail">
+          <p className="listing__detail">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Explicabo,
             asperiores ullam minus at <b>Read more...</b>
           </p>
 
-          <a href="" class="listing__cta">
+          <a href="" className="listing__cta">
             Withdraw application
           </a>
         </div>
