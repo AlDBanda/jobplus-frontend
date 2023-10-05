@@ -1,6 +1,7 @@
 
 import cookie from 'js-cookie';
 const AUTH_KEY = 'jobplus-token';
+import jwt_decode from 'jwt-decode';
 
 export const useCookie = () => {
   //save authCookies
@@ -13,10 +14,15 @@ export const useCookie = () => {
   };
   //getAuthCookie
   const getAuthCookie = () => {
-    cookie.get(AUTH_KEY);
+    return cookie.get(AUTH_KEY);
   };
   //isAuthCookieExpired
-  const isAuthCookieExpired = (key) => {
+  const isAuthCookieExpired = () => {
+    const token = getAuthCookie();
+    if (!token) return true;
+    const { exp } = jwt_decode(token);
+    const currentTime  = Date.now() / 1000;
+    return exp < currentTime;
   };
   //hasValidAuthCookie
   const hasValidAuthCookie = (key) => {
