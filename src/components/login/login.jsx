@@ -14,13 +14,12 @@ export default function login() {
 
   const { setIsAuthenticated } = useAuth();
 
-  const { saveAuthCookie, isAuthCookieExpired } = useCookie();
+  const { saveAuthCookie } = useCookie();
 
   const navigate = useNavigate();
   const { post } = useApi();
 
-  //temp delete later
-  console.log(isAuthCookieExpired());
+
 
   const handleSuccess = (res) => {
     //set the jwt token in a cookie

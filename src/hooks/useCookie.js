@@ -21,11 +21,12 @@ export const useCookie = () => {
     const token = getAuthCookie();
     if (!token) return true;
     const { exp } = jwt_decode(token);
-    const currentTime  = Date.now() / 1000;
-    return exp < currentTime;
+    const currentTime  = Date.now() / 1000; //to get in millisecs
+    return exp < currentTime; //will be true if expired
   };
   //hasValidAuthCookie
-  const hasValidAuthCookie = (key) => {
+  const hasValidAuthCookie = () => {
+    return !isAuthCookieExpired();
   }
 
   return {
