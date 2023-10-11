@@ -1,9 +1,18 @@
 import axios from 'axios'; 
-import { parseErrors } from '../../src/utils/parseErrors'; 
+import { parseErrors } from '../../src/utils/parseErrors';
+import { useCookie } from './useCookie';
+
+
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Get the backend URL from environment variables
 
 // Define a custom hook for making API requests
 export const useApi = () => {
+  const { getAuthCookie } = useCookie();
+  const token = getAuthCookie();
+  if (token){
+   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
   // Define a generic request function that can handle different HTTP methods
   const request = async (endpoint, options = {}) => {
     try {
