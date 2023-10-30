@@ -45,7 +45,10 @@ export default function login() {
       data: { identifier, password },
       onSuccess: (res) => handleSuccess(res),
       onFailure: (err) => setAlert(err)
+
     });
+    
+    
   };
    
     // const res = await post('auth/local', {data: data});
