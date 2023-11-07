@@ -4,7 +4,7 @@ import '../listings/listings.scss';
 export default function ListingFilter(props) {
   const { children } = props;
   return (
-    <div class="listing">
+    <div className="listing">
       {children}
     </div>
   );
