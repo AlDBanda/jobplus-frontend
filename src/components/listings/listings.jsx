@@ -7,6 +7,7 @@ import { useApi } from '../../hooks/useApi';
 
 
 const MAX_PER_PAGE = 3
+const MAX_LENGTH_CHARS = 200;
 
 // Default function component for displaying job listings
 export default function listings() {
@@ -21,8 +22,14 @@ export default function listings() {
   const handleSuccess = (res) => {
     const { entries, meta } = res.data;
 
+    // update each job is to include isTruncated
+    const updatedJobs = entries.map((job) => ({
+      ...job,
+      isTruncated: true
+    }));
+
     // Set the received job listings and metadata to the state variables
-    setJobs(entries);
+    setJobs(updatedJobs);
     setMeta(meta);
   };
 
@@ -41,6 +48,28 @@ export default function listings() {
     });
   };
 
+
+  const truncate =  (text, jobId) => {
+    const job = jobs.find((job) => job.id === jobId);
+
+    const shouldTruncate = text.length > MAX_LENGTH_CHARS && job?.isTruncated;
+    if (!shouldTruncate) return text;
+    const truncated = text.slice(0, MAX_LENGTH_CHARS);
+    //return elipsis if text is truncated
+    return truncated + "..."
+
+  }
+
+  const toggleTruncate = (jobId) => {
+    const updatedJobs = jobs.map(job => {
+      if (job.id === jobId) {
+        return { ...job,isTruncated: !job.isTruncated}
+        }
+        return job;
+    });
+
+    setJobs(updatedJobs);
+  }
   
   useEffect(() => {
     fetchJobs();
@@ -87,7 +116,10 @@ export default function listings() {
           </ul>
 
           <p className="listing__detail">
-           {job.description} <b>Read more...</b>
+           {truncate(job.description, job.id)} 
+           <a onClick={() => toggleTruncate(job.id)}>
+           <b>{job.isTruncated ? 'Read more' : 'Read less'}</b>
+           </a>
           </p>
 
           <a href="" className="listing__cta">
