@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import './listings.scss';
 import Paginate from '../paginate/paginate';
 import { StarSaved, Money, Location, Timer } from '../images';
@@ -34,6 +34,7 @@ export default function listings() {
       params: {
         // Specify parameters for the request (e.g., populate company, start, and limit)
         'populate[company]': true,
+        'populate[job_types]': true,
         'start': (page -1 ) * MAX_PER_PAGE, 
         'limit': MAX_PER_PAGE, 
       },
@@ -61,22 +62,27 @@ export default function listings() {
               </h1>
             <img className="listing__saved" src={StarSaved} alt="" />
             <p className="listing__company">
-              Posted by <span>Koco Media</span>
+              Posted by <span>{job.company.name}</span>
             </p>
           </header>
 
           <ul className="listing__items">
             <li>
               <img src={Money} alt="" />
-              <b>Salary negotiable</b>
+              <b>Salary {job.salaryType}</b>
             </li>
             <li>
               <img src={Location} alt="" />
-              Heyes, <b>Uxbridge</b>
+              Heyes, <b>{job.location}</b>
             </li>
             <li>
               <img src={Timer} alt="" />
-              Contract, full-time
+              {job.job_types.map((type, index, array) => (
+                <Fragment key={type.id}>
+                <span>{type.title}</span> 
+                {index !== array.length - 1 && <span>, </span>}
+                </Fragment>
+              ))}
             </li>
           </ul>
 
