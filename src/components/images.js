@@ -12,6 +12,7 @@ import HealthBig from '../assets/images/health-big.jpg';
 import HealthSmall from '../assets/images/health-small.jpg';
 import CookieClose from '../assets/images/cookie-close.svg';
 import StarSaved from '../assets/images/star-saved.svg';
+import StarUnSaved from '../assets/images/star-unsaved.svg';
 import Money from '../assets/images/money.svg';
 import Location from '../assets/images/location.svg';
 import Timer from '../assets/images/timer.svg';
@@ -31,6 +32,7 @@ export {
   HealthSmall,
   CookieClose,
   StarSaved,
+  StarUnSaved,
   Money,
   Location,
   Timer,

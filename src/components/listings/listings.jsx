@@ -1,8 +1,9 @@
 import React, {useState, useEffect, Fragment} from 'react';
 import './listings.scss';
 import Paginate from '../paginate/paginate';
-import { StarSaved, Money, Location, Timer } from '../images';
+import { StarSaved, StarUnSaved, Money, Location, Timer } from '../images';
 import { useApi } from '../../hooks/useApi';
+import ConfirmationModal from '../confirmation_modal/confirmation_modal';
 
 
 
@@ -14,6 +15,8 @@ export default function listings() {
   // State variables to hold job listings and their metadata
   const [jobs, setJobs] = useState([]);
   const [meta, setMeta] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [jobToSave, setJobToSave] = useState(null);
 
   // Access the get method from the useApi custom hook
   const { get } = useApi();
@@ -70,7 +73,23 @@ export default function listings() {
 
     setJobs(updatedJobs);
   }
+
+  const showModal = (job) => {
+    setJobToSave(job);
+    setIsModalOpen(true);
+  }
+
+  const hideModal = () => {
+    setIsModalOpen(false);
+  }
   
+
+  const acceptModal = () => {
+     console.log('Accept save the job:', jobToSave);
+     hideModal();
+  }
+
+
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -82,14 +101,21 @@ export default function listings() {
   
 
   return (
-    <section>
+    <>
+    <ConfirmationModal
+      isOpen={isModalOpen}
+      onClose={hideModal}
+      onAccept={acceptModal}
+      text= "You are about to save this job. Are you sure?"
+      />
+      <section>
       {jobs.map((job) => (
         <div key={job.id} className="listing__card">
           <header className="listing__header">
             <h1 className="listing__title">
               {job.title}
               </h1>
-            <img className="listing__saved" src={StarSaved} alt="" />
+            <img className="listing__saved" src={StarUnSaved} alt="" onClick={() => showModal(job)} />
             <p className="listing__company">
               Posted by <span>{job.company.name}</span>
             </p>
@@ -128,6 +154,7 @@ export default function listings() {
         </div>
       ))}
       <Paginate meta={meta.paginate} onPageChange={handlePageChange}/>
-    </section>
+      </section>
+    </>
   );
 }
