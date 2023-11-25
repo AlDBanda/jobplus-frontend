@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../styles/form.scss";
 import { Link } from "react-router-dom";
 import Alert from "../alert/alert";
-import { useApi } from "../../hooks/useApi";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
-import axios from "axios";
+import authService from '../../services/AuthService';
+
+
 export default function register() {
   // default value of our state is an empty string
   const [firstName, SetFirstName] = useState("");
@@ -13,11 +12,15 @@ export default function register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [alert, setAlert] = useState({}); // error msg is an object with 2 child..msg & detail
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [country, setCountry] = useState("");
-  console.log("phone number", phoneNumber);
-  const { post } = useApi();
+
+  const [alert, setAlert] = useState({});
+  
+
+  
+  const { registerUser } = authService();
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent page from reloading
     // check if password & confirm password match
@@ -31,7 +34,6 @@ export default function register() {
     const data = {
       firstName,
       lastName,
-      phoneNumber,
       email,
       password,
       username: email,
@@ -39,7 +41,6 @@ export default function register() {
     const handleSuccess = (res) => {
       SetFirstName("");
       setLastName("");
-      setPhoneNumber();
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -49,26 +50,16 @@ export default function register() {
         type: "success",
       });
     };
+
+    const handleError = (err) => {
+      setAlert(err);
+    };
+
     //refactor
-    await post("auth/local/register", {
-      data: data,
-      onSuccess: (res) => handleSuccess(),
-      onFailure: (err) => setAlert(err),
-    });
+    await registerUser(data, handleSuccess, handleError);
   };
-  const getUserLocation = async () => {
-    try {
-      const response = await axios.get("https://ipapi.co/json/");
-      console.log("location", response?.data);
-      setCountry(response?.data?.country_code);
-    } catch (e) {
-      console.error;
-    }
-  };
-  useEffect(() => {
-    getUserLocation();
-  }, [country]);
-  console.log(country);
+
+ 
   return (
     <>
       <Alert data={alert} />
@@ -93,17 +84,7 @@ export default function register() {
             onChange={(e) => setLastName(e.target.value)}
           />
         </div>
-        <div className="form__group form__group--page">
-          <label className="form__label">Phone Number</label>
-          <PhoneInput
-            className="PhoneInputInput"
-            placeholder="Enter phone number"
-            value={phoneNumber}
-            onChange={setPhoneNumber}
-            limitMaxLength={true}
-            defaultCountry={country}
-          />
-        </div>
+        
         <div className="form__group form__group--page">
           <label className="form__label">Email</label>
           <input

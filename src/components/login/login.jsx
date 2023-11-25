@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import '../styles/form.scss';
 import Alert from '../alert/alert';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from '../../hooks/useApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCookie } from '../../hooks/useCookie';
+import authService from '../../services/AuthService';
+
 
 export default function login() {
   const [identifier, setIdentifier] = useState('');
@@ -17,7 +18,10 @@ export default function login() {
   const { saveAuthCookie } = useCookie();
 
   const navigate = useNavigate();
-  const { post } = useApi();
+
+ 
+
+  const { loginUser } = authService();
 
 
 
@@ -34,48 +38,22 @@ export default function login() {
     navigate('/');
   };
 
+  const handleError = (err) => {
+    setAlert(err);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
-
-    // Checking if the function is being called correctly
-    console.log('handleLogin called');
      
-    await post ('auth/local', {
-      data: { identifier, password },
-      onSuccess: (res) => handleSuccess(res),
-      onFailure: (err) => setAlert(err)
-
-    });
-    
-    
+    await loginUser({identifier, password}, handleSuccess, handleError);
   };
    
-    // const res = await post('auth/local', {data: data});
-    // console.log(res);
-
-    // try {
-    //   const response = await axios.post(
-    //     'http://localhost:1337/api/auth/local', 
-    //     data
-    //   );
-      
-    //   //reset our state
-    //   setIdentifier('');
-    //   setPassword('');
-
-    //   //navigate to home page
-    //   navigate('/');
-    // } catch (err) {
-    //   setAlert(parseErrors(err));
-    // }
-  
 
 
   return (
     <>
     <Alert data={alert} />
-
     <form className="form form--page" onSubmit={handleSubmit}> {/* Using onSubmit to handle form submission */}
       <div className="form__group form__group--page">
         <label className="form__label">Email</label>
