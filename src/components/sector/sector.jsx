@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './sector.scss';
-import { useApi } from '../../hooks/useApi';
 import { Link } from 'react-router-dom';
+import sectorService from '../../services/SectorService';
 
 // Import statements
 const BASE_URL = import.meta.env.VITE_BASE_URL; // Define the BASE_URL based on environment variable
@@ -14,7 +14,8 @@ export default function sector() {
   const [sectors, setSectors] = useState([]);
 
   // Destructure the 'get' function from the 'useApi' custom hook
-  const { get } = useApi();
+  
+  const { fetchHomeSector } = sectorService();
 
   // Function to handle a successful API response
   const handleSuccess = (res) => {
@@ -28,23 +29,11 @@ export default function sector() {
   };
 
   // Asynchronous function to fetch data from the 'home-sector' API endpoint
-  const fetchHomeSector = async () => {
-    // Make an API request to 'home-sector'
-    await get('home-sector', {
-      onSuccess: (res) => handleSuccess(res),
-      params: {
-        // Specify API request parameters
-        'populate[sectors][populate][categories][populate][jobs]': true,
-        'populate[sectors][populate][smallimage]': true,
-        'populate[sectors][populate][bigImage]': true,
-        'populate[sectors][limit]': 3,
-      },
-    });
-  }
+
 
   // Use the 'useEffect' hook to run 'fetchHomeSector' when the component mounts
   useEffect(() => {
-    fetchHomeSector();
+    fetchHomeSector(handleSuccess);
   }, []);
 
 
