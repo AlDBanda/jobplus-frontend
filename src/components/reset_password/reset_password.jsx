@@ -4,6 +4,7 @@ import '../styles/form.scss';
 import Alert from '../alert/alert';
 import { useApi } from '../../hooks/useApi';
 import { useNavigate, useLocation } from 'react-router-dom';
+import authService from '../../services/AuthService';
 
 export default function reset_password() {
   // State variables for password, password confirmation, and alert messages
@@ -17,6 +18,8 @@ export default function reset_password() {
 
   // Custom hook for making API requests
   const { post } = useApi();
+
+  const { resetPassword } = authService();
 
   // Extracting the 'code' parameter from the URL query string
   const searchParams = new URLSearchParams(location.search);
@@ -32,36 +35,16 @@ export default function reset_password() {
     navigate('/login');
   }
 
+  const handleError = (err) => {
+    setAlert(err);
+  }
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
-    // Make an API POST request to reset the password
-    await post('auth/reset-password', {
-      data: { passwordConfirmation, password, code },
-      onSuccess: (res) => handleSuccess(), // Call handleSuccess on success
-      onFailure: (err) => setAlert(err)     // Set alert message on failure
-    });
-
-    // Checking if the function is being called correctly
-    console.log('handleSubmit called');
-
-   
-    // try {
-    //   const response = await axios.post(
-    //     'http://localhost:1337/api/auth/reset-password',
-    //     data
-    //   );
-
-    //   // Reset our state
-    //   setPasswordConfirmation('');
-    //   setPassword('');
-
-    //   // Navigate to the home page
-    //   navigate('/login');
-    // } catch (err) {
-    //   setAlert(parseErrors(err));
-    // }
+    await resetPassword(passwordConfirmation, password, code, handleSuccess, setAlert)
+    
+  
   };
 
 

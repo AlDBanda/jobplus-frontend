@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/form.scss';
 import Alert from '../alert/alert';
-import { useApi } from '../../hooks/useApi';
-
+import authService from '../../services/AuthService';
 
 export default function forgot_password() {
   const [email, setEmail] = useState('');
   const [alert, setAlert] = useState({});
 
-  const { post } = useApi();
+  const { forgotPassword } = authService();
 
   const handleSuccess = () => {
     //reset our state
@@ -21,71 +20,48 @@ export default function forgot_password() {
     });
   };
 
- 
+  const handleError = (err) => {
+    console.error('Error during password reset:', err); // Log the error for debugging
+    setAlert(err);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default submission process when submitting the page
 
+    console.log('Submitting forgot password request with email:', email); // Log the email for debugging
 
-    // Checking if the function is being called correctly
-    console.log('handleLogin called');
-
-    await post('auth/forgot-password', {
-      data: { email },
-      onSuccess: (res) => handleSuccess(),
-      onFailure: (err) => setAlert(err)
-    });
-    // try {
-    //   const response = await axios.post(
-    //     'http://localhost:1337/api/auth/forgot-password', 
-    //     data
-    //   );
-      
-    //   //reset our state
-    //   setEmail('');
-    
-
-    // //set success alert
-    // setAlert({
-    //   type:'success',
-    //   message: 'Please check your email for further instructions',
-    // })
-    // } catch (err) {
-    //   setAlert(parseErrors(err));
-    // }
+    await forgotPassword(email, handleSuccess, handleError);
   };
-
 
   return (
     <>
-    <Alert data={alert} />
+      <Alert data={alert} />
 
-    <form className="form form--page" onSubmit={handleSubmit}> {/* Using onSubmit to handle form submission */}
-      <div className="form__group form__group--page">
-        <label className="form__label">Email</label>
-        <input
-          className="form__field"
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
+      <form className="form form--page" onSubmit={handleSubmit}>
+        <div className="form__group form__group--page">
+          <label className="form__label">Email</label>
+          <input
+            className="form__field"
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-      
+        <div className="form__group form__group--page">
+          <button
+            className="form__btn"
+            type="submit"
+          >
+            Reset Password
+          </button>
+        </div>
 
-      <div className="form__group form__group--page">
-        <button
-          className="form__btn" // Change input type to button
-          type="submit" // Specify the button type as "submit" to trigger submission
-        >
-          Login
-        </button>
-      </div>
-
-      <footer>
-        Have an account already? <Link to="/login">Login</Link>
-      </footer>
-    </form>
+        <footer>
+          Have an account already? <Link to="/login">Login</Link>
+        </footer>
+      </form>
     </>
   );
 }
