@@ -2,12 +2,12 @@ import React, {useState, useEffect, Fragment} from 'react';
 import './listings.scss';
 import Paginate from '../paginate/paginate';
 import { StarSaved, StarUnSaved, Money, Location, Timer } from '../images';
-import { useApi } from '../../hooks/useApi';
 import ConfirmationModal from '../confirmation_modal/confirmation_modal';
+import jobService from '../../services/JobService';
 
 
 
-const MAX_PER_PAGE = 3
+
 const MAX_LENGTH_CHARS = 200;
 
 // Default function component for displaying job listings
@@ -19,7 +19,8 @@ export default function listings() {
   const [jobToSave, setJobToSave] = useState(null);
 
   // Access the get method from the useApi custom hook
-  const { get } = useApi();
+  
+  const { fetchJobs } = jobService();
 
   // Function to handle the success response of the API call
   const handleSuccess = (res) => {
@@ -37,19 +38,8 @@ export default function listings() {
   };
 
   // Function to fetch jobs from the API
-  const fetchJobs = async (page = 1) => {
-    // Request job data from the API
-    await get('jobs', {
-      onSuccess: (res) => handleSuccess(res),
-      params: {
-        // Specify parameters for the request (e.g., populate company, start, and limit)
-        'populate[company]': true,
-        'populate[job_types]': true,
-        'start': (page -1 ) * MAX_PER_PAGE, 
-        'limit': MAX_PER_PAGE, 
-      },
-    });
-  };
+
+  
 
 
   const truncate =  (text, jobId) => {
@@ -91,11 +81,12 @@ export default function listings() {
 
 
   useEffect(() => {
-    fetchJobs();
+    const page = 1;
+    fetchJobs(page, handleSuccess);
   }, []);
 
   const handlePageChange = (pageNumber) => {
-    fetchJobs(pageNumber);
+    fetchJobs(pageNumber, handleSuccess);
   };
 
   
