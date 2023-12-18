@@ -89,6 +89,7 @@ export default function listings() {
     fetchJobs(pageNumber, handleSuccess);
   };
 
+  console.log(jobs);
   
 
   return (

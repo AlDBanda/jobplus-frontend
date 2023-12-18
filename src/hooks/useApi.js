@@ -12,7 +12,9 @@ export const useApi = () => {
   const token = getAuthCookie();
   if (token){
    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+   axios.defaults.headers.common['X-User-Id'] = 5;
   }
+
   // Define a generic request function that can handle different HTTP methods
   const request = async (endpoint, options = {}) => {
     try {

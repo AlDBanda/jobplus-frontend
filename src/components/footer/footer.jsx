@@ -3,6 +3,6 @@ import './footer.scss'
 
 export default function footer() {
   return (
-    <footer className="footer">COPYRIGHT &copy; jobplus 2023</footer>
+    <footer className="footer">COPYRIGHT &copy; jobplus 2024</footer>
   )
 }
