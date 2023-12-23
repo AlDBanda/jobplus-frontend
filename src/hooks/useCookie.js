@@ -29,11 +29,20 @@ export const useCookie = () => {
     return !isAuthCookieExpired();
   }
 
+  //get logged in user id
+  const getLoggedInUserId = () => {
+    const token = getAuthCookie();
+    if (!token) return null;
+    const { id } = jwt_decode(token);
+    return id;
+  };
+
   return {
     saveAuthCookie,
     deleteAuthCookie,
     getAuthCookie,
     isAuthCookieExpired,
     hasValidAuthCookie,
+    getLoggedInUserId,
  };
 };

@@ -4,6 +4,10 @@ import Paginate from '../paginate/paginate';
 import { StarSaved, StarUnSaved, Money, Location, Timer } from '../images';
 import ConfirmationModal from '../confirmation_modal/confirmation_modal';
 import jobService from '../../services/JobService';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
+import applyJobService from '../../services/AppliedJobService';
 
 
 
@@ -17,6 +21,9 @@ export default function listings() {
   const [meta, setMeta] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobToSave, setJobToSave] = useState(null);
+
+  const { applyForJob, withdrawApplication } = applyJobService();
+  const { getLoggedInUserId } = useAuth();
 
   // Access the get method from the useApi custom hook
   
@@ -89,6 +96,28 @@ export default function listings() {
     fetchJobs(pageNumber, handleSuccess);
   };
 
+  const handleApplyForJob = async(jobId) => {
+    const data = {
+      job: jobId,
+      user: getLoggedInUserId(),
+    };
+
+    await applyForJob(data, (res) => {
+      const updatedJobs = jobs.map((job) => {
+        if (job.id === jobId) {
+          return { ...job, hasApplied: true };
+        }
+         return job;
+      });
+      setJobs(updatedJobs);
+    });
+  };
+
+  const handleWithdrawApplication = async(jobId) => {
+    console.log('Withdrawing application for job:', jobId);
+  };
+
+
   console.log(jobs);
   
 
@@ -140,9 +169,15 @@ export default function listings() {
            </a>
           </p>
 
-          <a href="" className="listing__cta">
-            Withdraw application
-          </a>
+          <Link to="#"
+             className="listing_cta"
+             onClick={(e) => {
+              e.preventDefault();
+              job.hasApplied ? handleWithdrawApplication(job.id) : handleApplyForJob(job.id);
+             }}
+             >
+              <b>{job.hasApplied ? 'Withdraw application' : 'Apply Now'}</b>
+             </Link>
         </div>
       ))}
       <Paginate meta={meta.paginate} onPageChange={handlePageChange}/>
